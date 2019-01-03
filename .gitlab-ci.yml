@@ -1,0 +1,11 @@
+eslint:
+  stage: test
+  script:
+    - eslint .
+
+deploy:
+  stage: deploy
+  only:
+    - tags
+  script:
+    - cnpm publish

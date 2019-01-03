@@ -1,0 +1,16 @@
+{
+  "name": "@hecom/storage",
+  "version": "0.0.1",
+  "description": "AsyncStorage prefix and parts",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.hecom.cn:rn/storage.git"
+  },
+  "author": "Xiaosong Gao",
+  "license": "MIT",
+  "dependencies": {
+    "react-native-general-storage": "^1.0.2"
+  }
+}
