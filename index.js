@@ -37,10 +37,9 @@ function _setUserId(userId) {
 }
 
 function _wrapper(func, commonIndex) {
-    return function () {
-        const isCommon = arguments[commonIndex];
-        const args = arguments.slice(0, commonIndex);
-        const prefix = isCommon ? CommonPart : UserPart;
-        return func(...args, prefix);
+    return function (...params) {
+        const prefix = params[commonIndex] ? CommonPart : UserPart;
+        params[commonIndex] = prefix;
+        return func(...params);
     };
 }
