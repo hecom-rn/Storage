@@ -1,5 +1,8 @@
 # Storage
 
+[![npm version](http://npm.hecom.cn:7002/badge/v/@hecom/storage.svg)](http://npm.hecom.cn:7002/package/@hecom/storage)
+[![build status](http://gitlab.hecom.cn:8081/rn/storage/badges/master/build.svg)](http://gitlab.hecom.cn:8081/rn/storage/commits/master)
+
 这是对于持久化存储库[react-native-general-storage](https://github.com/gaoxiaosong/react-native-general-storage)的进一步封装，加入了前缀管理，以及存储区的判重逻辑，对外隐藏了前缀的实现。
 
 前缀分为两种：一种是Common前缀，表示跟用户无关的数据存储；一种是User前缀，表示用户相关的数据存储。
