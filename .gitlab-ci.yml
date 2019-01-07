@@ -9,6 +9,8 @@ eslint:
 
 publish:
   stage: deploy
+  only:
+    - tags
   script:
     - npm install -g uglify-es
     - mkdir -p dist
