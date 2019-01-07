@@ -1,7 +1,6 @@
 # Storage
 
 [![npm version](https://img.shields.io/npm/v/@hecom/storage.svg?style=flat)](https://www.npmjs.com/package/@hecom/storage)
-[![pipeline status](https://gitlab.com/hecom/storage/badges/master/pipeline.svg)](https://gitlab.com/hecom/storage/commits/master)
 
 这是对于持久化存储库[react-native-general-storage](https://github.com/gaoxiaosong/react-native-general-storage)的进一步封装，加入了前缀管理，以及存储区的判重逻辑，对外隐藏了前缀的实现。
 
@@ -10,7 +9,7 @@
 ## 安装
 
 ```shell
-yarn add @hecom/storage
+npm install --save @hecom/storage
 ```
 
 ## 使用方法

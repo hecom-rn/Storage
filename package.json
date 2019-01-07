@@ -1,12 +1,12 @@
 {
   "name": "@hecom/storage",
-  "version": "0.0.1",
-  "description": "AsyncStorage prefix and parts",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "AsyncStorage Prefix and Parts Management",
+  "main": "dist/index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git@gitlab.hecom.cn:rn/storage.git"
+    "url": "git@gitlab.com:hecom/storage.git"
   },
   "author": "Xiaosong Gao",
   "license": "MIT",
