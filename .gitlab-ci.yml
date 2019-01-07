@@ -15,4 +15,4 @@ publish:
     - uglifyjs -c -m --ecma 5 src/index.js -o dist/index.js
     - echo -n '//registry.npmjs.org/:_authToken=' > ~/.npmrc
     - echo $NPM_TOKEN >> ~/.npmrc
-    - npm publish
+    - npm publish --access public
