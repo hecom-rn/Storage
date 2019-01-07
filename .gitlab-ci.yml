@@ -1,3 +1,5 @@
+image: node:latest
+
 eslint:
   stage: test
   script:
