@@ -4,7 +4,7 @@ eslint:
   stage: test
   script:
     - npm install -g eslint babel-eslint eslint-plugin-import eslint-plugin-react eslint-plugin-react-native
-    - echo '${ESLINTRC_JS}' > .eslintrc.js
+    - echo $ESLINTRC_JS > .eslintrc.js
     - eslint src/*.js
 
 publish:
@@ -15,5 +15,6 @@ publish:
     - npm install -g uglify-es
     - mkdir -p dist
     - uglifyjs -c -m --ecma 5 src/index.js -o dist/index.js
-    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+    - echo '//registry.npmjs.org/:_authToken=' > .npmrc
+    - echo $NPM_TOKEN >> .npmrc
     - npm publish
