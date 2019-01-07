@@ -9,10 +9,12 @@ eslint:
 
 publish:
   stage: deploy
+  only:
+    - tags
   script:
     - npm install -g uglify-es
     - mkdir -p dist
     - uglifyjs -c -m --ecma 5 src/index.js -o dist/index.js
     - echo -n '//registry.npmjs.org/:_authToken=' > ~/.npmrc
     - echo -n $NPM_TOKEN >> ~/.npmrc
-    - cat ~/.npmrc
+    - npm publish
