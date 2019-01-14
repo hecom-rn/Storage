@@ -17,6 +17,9 @@ export default {
     merge: _wrapper(AsyncStorage.merge, 2),
     clear: _wrapper(AsyncStorage.clear, 1),
     getKeys: _wrapper(AsyncStorage.getKeys, 1),
+    multiGet: _wrapper(AsyncStorage.multiGet, 1),
+    multiSet: _wrapper(AsyncStorage.multiSet, 2),
+    multiRemove: _wrapper(AsyncStorage.multiRemove, 1),
 };
 
 function _initGlobal() {

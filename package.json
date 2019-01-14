@@ -11,6 +11,6 @@
   "author": "Xiaosong Gao",
   "license": "MIT",
   "dependencies": {
-    "react-native-general-storage": "^1.0.2"
+    "react-native-general-storage": "^1.0.3"
   }
 }
