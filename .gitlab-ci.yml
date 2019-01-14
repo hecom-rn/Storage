@@ -12,9 +12,8 @@ publish:
   only:
     - tags
   script:
-    - npm install -g uglify-es
-    - mkdir -p dist
-    - uglifyjs -c -m --ecma 5 src/index.js -o dist/index.js
+    - npm install --no-save @babel/cli @babel/core @babel/preset-env @babel/preset-react @babel/plugin-proposal-class-properties
+    - ./node_modules/.bin/babel src -d dist --minified
     - echo -n '//registry.npmjs.org/:_authToken=' > ~/.npmrc
     - echo $NPM_TOKEN >> ~/.npmrc
     - npm publish --access public
