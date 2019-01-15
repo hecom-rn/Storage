@@ -1,6 +1,6 @@
 {
   "name": "@hecom/storage",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AsyncStorage Prefix and Parts Management",
   "main": "dist/index.js",
   "scripts": {},
