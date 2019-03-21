@@ -5,7 +5,7 @@ const rootNode = {
     parts: {},
 };
 
-const ModuleName = '@hecom/initialization';
+const ModuleName = '@hecom/storage';
 const CommonPart = '__common__';
 const UserPart = '__user__';
 
