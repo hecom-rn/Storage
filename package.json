@@ -1,16 +1,26 @@
 {
   "name": "@hecom/storage",
   "version": "1.0.2",
+  "private": false,
   "description": "AsyncStorage Prefix and Parts Management",
-  "main": "dist/index.js",
-  "scripts": {},
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "./node_modules/.bin/eslint . --ext .ts,.tsx"
+  },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:hecom/storage.git"
+    "url": "https://github.com/hecom-rn/Storage.git"
   },
   "author": "Xiaosong Gao",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "eslint-plugin-automatic": "latest"
+  },
   "dependencies": {
+    "@hecom/initialization": "^1.0.0",
     "react-native-general-storage": "^1.0.4"
   }
 }

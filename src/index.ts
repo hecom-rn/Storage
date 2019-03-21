@@ -1,14 +1,16 @@
 import AsyncStorage from 'react-native-general-storage';
+import Initialization from '@hecom/initialization';
 
 const rootNode = {
     parts: {},
 };
 
+const ModuleName = '@hecom/initialization';
 const CommonPart = '__common__';
 const UserPart = '__user__';
 
 export default {
-    initGlobal: _initGlobal,
+    name: ModuleName,
     registerPart: _registerPart,
     setUserId: _setUserId,
     set: _wrapper(AsyncStorage.set, 2),
@@ -22,23 +24,37 @@ export default {
     multiRemove: _wrapper(AsyncStorage.multiRemove, 1),
 };
 
-function _initGlobal() {
+Initialization.add(ModuleName, function () {
     AsyncStorage.setPrefix(CommonPart, CommonPart);
     _setUserId(null);
-}
+});
 
+/**
+ * 注册存储区域。
+ * @param key 唯一的键，重复会报错
+ * @param moduleName 对应模块名称
+ */
 function _registerPart(key, moduleName) {
     if (rootNode.parts[key]) {
-        throw new Error(key + ' has been registered by ' + rootNode.parts[key]);
+        console.error(key, 'has been registered by', rootNode.parts[key]); // eslint-disable-line no-console
     } else {
         rootNode.parts[key] = moduleName;
     }
 }
 
+/**
+ * 设置用户存储区的前缀，即用户Id。
+ * @param userId 用户Id
+ */
 function _setUserId(userId) {
     AsyncStorage.setPrefix(UserPart, userId, true);
 }
 
+/**
+ * 对于react-native-general-storage中的接口的封装。
+ * @param func 接口方法
+ * @param commonIndex 分区参数在参数列表中的位置，从0开始计数
+ */
 function _wrapper(func, commonIndex) {
     return function (...params) {
         const prefix = params[commonIndex] ? CommonPart : UserPart;
