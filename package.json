@@ -1,6 +1,6 @@
 {
   "name": "@hecom/storage",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "AsyncStorage Prefix and Parts Management",
   "main": "src/index.ts",
@@ -20,7 +20,7 @@
     "eslint-plugin-automatic": "latest"
   },
   "dependencies": {
-    "@hecom/initialization": "^1.0.0",
+    "@hecom/initialization": "latest",
     "react-native-general-storage": "^1.0.4"
   }
 }
