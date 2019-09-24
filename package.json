@@ -1,6 +1,6 @@
 {
   "name": "@hecom/storage",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": false,
   "description": "AsyncStorage Prefix and Parts Management",
   "main": "src/index.ts",
