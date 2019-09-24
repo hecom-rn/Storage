@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@hecom/initialization": "latest",
-    "react-native-general-storage": "^1.0.4"
+    "react-native-general-storage": "^1.0.5"
   }
 }
