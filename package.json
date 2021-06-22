@@ -5,7 +5,9 @@
   "description": "AsyncStorage Prefix and Parts Management",
   "main": "src/index.ts",
   "scripts": {
-    "test": "./node_modules/.bin/eslint . --ext .ts,.tsx"
+    "test": "./node_modules/.bin/eslint . --ext .ts,.tsx",
+    "minor": "npm version minor -m 'Bump version %s';git push origin master --tags",
+    "patch": "npm version patch -m 'Bump version %s';git push origin master --tags"
   },
   "repository": {
     "type": "git",
@@ -17,10 +19,12 @@
     "access": "public"
   },
   "devDependencies": {
-    "eslint-plugin-automatic": "latest"
-  },
-  "dependencies": {
+    "eslint-plugin-automatic": "latest",
     "@hecom/initialization": "latest",
-    "react-native-general-storage": "^1.0.5"
+    "@react-native-async-storage/async-storage": "^1.15.5"
+  },
+  "peerDependencies": {
+    "@hecom/initialization": "*",
+    "@react-native-async-storage/async-storage": "*"
   }
 }

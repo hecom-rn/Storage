@@ -1,4 +1,4 @@
-import AsyncStorage from 'react-native-general-storage';
+import * as AsyncStorage from './AsyncStorage';
 import Initialization from '@hecom/initialization';
 
 const rootNode = {
@@ -13,6 +13,7 @@ export default {
     name: ModuleName,
     registerPart: _registerPart,
     setUserId: _setUserId,
+    setPrefix: AsyncStorage.setPrefix,
     set: _wrapper(AsyncStorage.set, 2),
     get: _wrapper(AsyncStorage.get, 1),
     remove: _wrapper(AsyncStorage.remove, 1),
