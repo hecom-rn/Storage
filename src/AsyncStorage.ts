@@ -21,7 +21,9 @@ export function setPrefix(key, value, isDefault = false) {
 }
 
 export function set(keys, content, prefix = undefined) {
-    if (content === null) return; // ios 存null会报错
+    if (content === null || content === undefined) { 
+        return remove(keys, prefix);
+    }
     const value = JSON.stringify(content);
     const key = generateKey(keys, prefix);
     return AsyncStorage.setItem(key, value);
