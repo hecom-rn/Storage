@@ -21,6 +21,9 @@ export function setPrefix(key, value, isDefault = false) {
 }
 
 export function set(keys, content, prefix = undefined) {
+    if (content === null || content === undefined) { 
+        return remove(keys, prefix);
+    }
     const value = JSON.stringify(content);
     const key = generateKey(keys, prefix);
     return AsyncStorage.setItem(key, value);
@@ -50,6 +53,25 @@ export function clear(keys, prefix = undefined) {
             const filteredKeys = result.filter(item => item.startsWith(keyPrefix));
             return AsyncStorage.multiRemove(filteredKeys);
         });
+}
+
+export function getStartsWith(keys, prefix = undefined) {
+    const keyPrefix = generateKey(keys, prefix);
+    return AsyncStorage.getAllKeys()
+        .then(result => {
+            const filteredKeys = result.filter(item => item.startsWith(keyPrefix));
+            return AsyncStorage.multiGet(filteredKeys);
+        }).then(result => result.map(i => {
+                const key = i[0];
+                const value = JSON.parse(i[1]);
+                const oriKeys = Array.isArray(keys) ? keys : [keys];
+                const end = key.slice(keyPrefix.length + defaultSeperator.length).split(defaultSeperator);
+                return {
+                    oriKey: oriKeys.concat(end),
+                    value
+                }
+            })
+        )
 }
 
 export function getKeys(keys, prefix = undefined) {
