@@ -29,10 +29,10 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      # peerDependencies（@hecom/initialization、@react-native-async-storage/async-storage）
-      # 由宿主 App 提供，--legacy-peer-deps 跳过 npm 自动安装 peer 依赖
+      # 依赖安装走 npmmirror 镜像（仓库 .npmrc 同源）；publish 必须回 npmjs 官方源，
+      # 镜像不收发布。--legacy-peer-deps 跳过 npm 自动安装 peer 依赖（由宿主 App 提供）
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --registry=https://registry.npmmirror.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -44,6 +44,6 @@ jobs:
         run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --registry=https://registry.npmjs.org
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

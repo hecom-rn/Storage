@@ -9,6 +9,12 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
     multiRemove: jest.fn(() => Promise.resolve()),
 }));
 
+// @hecom/initialization 也是 TS 源码包，落在 node_modules 后不被 jest 转换，直接 mock
+jest.mock('@hecom/initialization', () => ({
+    __esModule: true,
+    default: { add: jest.fn(), process: jest.fn() },
+}));
+
 // 前缀注册表是模块级状态，每个用例重置模块保证互不污染
 let mod;
 beforeEach(() => {
@@ -51,7 +57,7 @@ describe('分区前缀未注册时（登出/会话过期窗口）', () => {
 
 describe('包装层（src/index.ts）登出时序契约', () => {
     test('setUserId(null) 模拟登出后，默认分区调用 reject 而非同步 throw', async () => {
-        const index = require('../index');
+        const index = require('../index').default;
         index.setUserId('u9');
         index.setUserId(null);
         const read = () => index.get(['ProcessCommentCache', 'version_1']);
@@ -63,7 +69,7 @@ describe('包装层（src/index.ts）登出时序契约', () => {
     });
 
     test('登录后注册前缀，读取正常且落到 __user__ 分区', async () => {
-        const index = require('../index');
+        const index = require('../index').default;
         index.setUserId('u9');
         await index.set(['k'], { b: 2 });
         expect(require('@react-native-async-storage/async-storage').setItem).toHaveBeenCalledWith(
