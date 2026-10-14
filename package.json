@@ -5,7 +5,7 @@
   "description": "AsyncStorage Prefix and Parts Management",
   "main": "src/index.ts",
   "scripts": {
-    "test": "exit 0",
+    "test": "jest",
     "eslint": "./node_modules/.bin/eslint . --ext .ts,.tsx",
     "minor": "npm version minor -m 'Bump version %s';git push origin master --tags",
     "patch": "npm version patch -m 'Bump version %s';git push origin master --tags"
@@ -20,9 +20,12 @@
     "access": "public"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-typescript": "^7.24.0",
     "eslint-plugin-automatic": "latest",
     "@hecom/initialization": "latest",
-    "@react-native-async-storage/async-storage": "^1.15.5"
+    "@react-native-async-storage/async-storage": "^1.15.5",
+    "jest": "^29.7.0"
   },
   "peerDependencies": {
     "@hecom/initialization": "*",
