@@ -23,17 +23,13 @@ beforeEach(() => {
 });
 
 describe('分区前缀未注册时（登出/会话过期窗口）', () => {
-    test('全部公开函数返回 rejected promise，不再同步 throw', async () => {
+    test('写接口返回 rejected promise，不再同步 throw', async () => {
         const calls = [
-            () => mod.get(['x']),
             () => mod.set(['x'], {}),
             () => mod.set(['x'], null),
             () => mod.remove(['x']),
             () => mod.merge(['x'], {}),
             () => mod.clear(['x']),
-            () => mod.getStartsWith(['x']),
-            () => mod.getKeys(['x']),
-            () => mod.multiGet([['x'], ['y']]),
             () => mod.multiSet([['x'], ['y']], [1, 2]),
             () => mod.multiRemove([['x'], ['y']]),
         ];
@@ -48,22 +44,22 @@ describe('分区前缀未注册时（登出/会话过期窗口）', () => {
         );
     });
 
-    test('显式传入未注册前缀同样 reject', async () => {
-        await expect(mod.get(['x'], '__user__')).rejects.toThrow(
+    test('显式传入未注册前缀，写接口同样 reject', async () => {
+        await expect(mod.remove(['x'], '__user__')).rejects.toThrow(
             'prefix __user__ is not set previously'
         );
     });
 });
 
 describe('包装层（src/index.ts）登出时序契约', () => {
-    test('setUserId(null) 模拟登出后，默认分区调用 reject 而非同步 throw', async () => {
+    test('setUserId(null) 模拟登出后，默认分区写接口 reject 而非同步 throw', async () => {
         const index = require('../index').default;
         index.setUserId('u9');
         index.setUserId(null);
-        const read = () => index.get(['ProcessCommentCache', 'version_1']);
+        const write = () => index.set(['k'], { a: 1 });
         let promise;
         expect(() => {
-            promise = read();
+            promise = write();
         }).not.toThrow();
         await expect(promise).rejects.toThrow('prefix __user__ is not set previously');
     });
@@ -93,5 +89,49 @@ describe('前缀注册后正常读写', () => {
         mod.setPrefix('__user__', ['u1'], true);
         await mod.set(['x'], { b: 2 });
         expect(asyncStorage.setItem).toHaveBeenCalledWith('u1$x', JSON.stringify({ b: 2 }));
+    });
+});
+
+describe('读接口在分区未注册时兜底空值（Sentry CRMPLUS-2BR）', () => {
+    // 线上登录失败流程（_startLoginProcess 触发的登录任务）与首页组件构造函数
+    // 会在 __user__ 分区注册前读存储；1.2.0 把同步 throw 转为 rejected promise 后，
+    // 无 .catch 的调用方仍产生 unhandled rejection 上报 Sentry（count=398/users=368）。
+    // 契约：读接口对「分区未注册」兜底空值——未登录态本就没有用户数据，
+    // undefined/[] 是真实语义；写接口保持 reject（数据不可静默丢弃）。
+    test('get resolve undefined，不再 reject', async () => {
+        await expect(mod.get(['ProcessCommentCache', 'version_1'])).resolves.toBeUndefined();
+    });
+
+    test('getKeys resolve 空数组', async () => {
+        await expect(mod.getKeys(['x'])).resolves.toEqual([]);
+    });
+
+    test('getStartsWith resolve 空数组', async () => {
+        await expect(mod.getStartsWith(['x'])).resolves.toEqual([]);
+    });
+
+    test('multiGet resolve 空数组', async () => {
+        await expect(mod.multiGet([['x'], ['y']])).resolves.toEqual([]);
+    });
+
+    test('显式传入未注册前缀的 get 同样兜底 undefined', async () => {
+        await expect(mod.get(['x'], '__user__')).resolves.toBeUndefined();
+    });
+
+    test('包装层 setUserId(null) 登出后，默认分区 get 兜底 undefined（不产生 rejection）', async () => {
+        const index = require('../index').default;
+        index.setUserId('u9');
+        index.setUserId(null);
+        let promise;
+        expect(() => {
+            promise = index.get(['ProcessCommentCache', 'version_1']);
+        }).not.toThrow();
+        await expect(promise).resolves.toBeUndefined();
+    });
+
+    test('写接口仍 reject，数据不静默丢弃', async () => {
+        await expect(mod.set(['x'], {})).rejects.toThrow();
+        await expect(mod.remove(['x'])).rejects.toThrow();
+        await expect(mod.clear(['x'])).rejects.toThrow();
     });
 });
