@@ -39,6 +39,9 @@ export function get(keys, prefix = undefined) {
     try {
         key = generateKey(keys, prefix);
     } catch (e) {
+        if (isPrefixNotSetError(e)) {
+            return Promise.resolve(undefined);
+        }
         return Promise.reject(e);
     }
     return AsyncStorage.getItem(key)
@@ -85,6 +88,9 @@ export function getStartsWith(keys, prefix = undefined) {
     try {
         keyPrefix = generateKey(keys, prefix);
     } catch (e) {
+        if (isPrefixNotSetError(e)) {
+            return Promise.resolve([]);
+        }
         return Promise.reject(e);
     }
     return AsyncStorage.getAllKeys()
@@ -109,6 +115,9 @@ export function getKeys(keys, prefix = undefined) {
     try {
         keyPrefix = generateKey(keys, prefix);
     } catch (e) {
+        if (isPrefixNotSetError(e)) {
+            return Promise.resolve([]);
+        }
         return Promise.reject(e);
     }
     return AsyncStorage.getAllKeys()
@@ -124,6 +133,9 @@ export function multiGet(keys, prefix = undefined) {
     try {
         realKeys = keys.map(key => generateKey(key, prefix));
     } catch (e) {
+        if (isPrefixNotSetError(e)) {
+            return Promise.resolve([]);
+        }
         return Promise.reject(e);
     }
     return AsyncStorage.multiGet(realKeys)
@@ -156,6 +168,21 @@ export function multiRemove(keys, prefix = undefined) {
 // generateKey 会同步 throw，异常直接穿透到调用方同步栈（构造函数/回调）导致
 // fatal 崩溃。以上各公开函数统一把该异常转为 rejected promise，
 // 使调用方已有的 .catch 能按预期接住
+//
+// 读接口（get/getKeys/getStartsWith/multiGet）对「分区未注册」进一步兜底空值：
+// 未登录态本就没有用户分区数据，undefined/[] 是真实语义。rejected promise 在
+// 调用方无 .catch 时仍会以 unhandled rejection 冒泡上报 Sentry
+// （Sentry CRMPLUS-2BR：登录失败流程的登录任务/首页组件在窗口期读分区，
+// count=398/users=368），兜底后整组收敛。
+// 写接口保持 reject：分区未注册时写入会丢失数据，不能静默丢弃。
+function isPrefixNotSetError(e) {
+    return (
+        e instanceof Error &&
+        (/ is not set previously$/.test(e.message) ||
+            e.message === 'you must set a default prefix at least')
+    );
+}
+
 function generateKey(keys, prefix) {
     const key = Array.isArray(keys) ? keys : [keys];
     let prefixItems;
